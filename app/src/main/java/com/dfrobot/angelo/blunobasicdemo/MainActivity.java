@@ -29,12 +29,17 @@ public class MainActivity  extends BlunoLibrary {
     private boolean connectionOK = false;
     private boolean filesOK = false;
 
+    private Stimulus soundStimulus;
+
     private long timestamp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+        this.soundStimulus = new Stimulus(this);
+        this.soundStimulus.initSounds();
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -184,6 +189,13 @@ public class MainActivity  extends BlunoLibrary {
         this.timestamp = System.currentTimeMillis();
         this.stopExperiment.setVisibility(View.VISIBLE);
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        this.soundStimulus.playSound(0);
     }
 
     public void logArduino (String theString)
