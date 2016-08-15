@@ -22,6 +22,8 @@ public class MainActivity  extends BlunoLibrary {
     private Button stopExperiment;
 	private String receivedString;
 	private String participant;
+    private String speed;
+    private String block;
 	private PrintWriter pw_biodata = null;
 	private PrintWriter pw_stimuli = null;
 
@@ -135,12 +137,22 @@ public class MainActivity  extends BlunoLibrary {
 	public void createLogFiles(View view)
 	{
         EditText participant_id = (EditText) findViewById(R.id.participantID);
+        EditText speed_id = (EditText) findViewById(R.id.conditionID);
+        EditText block_id = (EditText) findViewById(R.id.blockID);
+        this.speed = speed_id.getText().toString();
+        this.block = block_id.getText().toString();
         this.participant = participant_id.getText().toString();
         if (!this.participant.isEmpty()) {
             String path = Environment.getExternalStorageDirectory().getPath();
 
-            File file = new File(path, this.participant + "_stimuli.csv");
-            File file2 = new File(path, this.participant + "_biodata.csv");
+            File file = new File(path, "P" + this.participant
+                    + "_S" + this.speed
+                    + "_B" + this.block
+                    + "_stimuli.csv");
+            File file2 = new File(path, "P" + this.participant
+                    + "_S" + this.speed
+                    + "_B" + this.block
+                    + "_biodata.csv");
             if (file.exists()) {
                 file.delete();
                 System.out.println("Deleted stimulus file");

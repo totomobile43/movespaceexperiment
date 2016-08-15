@@ -20,6 +20,9 @@ public class Stimulus implements SoundPool.OnLoadCompleteListener {
     private Context mContext;
     private MediaPlayer mp = null;
 
+    // Make sure to match stimuli size and this value
+    public static final int NB_STIMULI = 5;
+
     public Stimulus (Context _context)
     {
         this.mContext = _context;
