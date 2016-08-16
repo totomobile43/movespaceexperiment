@@ -19,7 +19,6 @@ import java.io.PrintWriter;
 public class MainActivity  extends BlunoLibrary {
 	private Button buttonScan;
     private Button launchExperiment;
-    private Button stopExperiment;
 	private String receivedString;
 	private String participant;
     private String speed;
@@ -30,6 +29,7 @@ public class MainActivity  extends BlunoLibrary {
     private boolean experimentOn = false;
     private boolean connectionOK = false;
     private boolean filesOK = false;
+    private boolean trialOn = false;
 
     private Stimulus soundStimulus;
 
@@ -56,8 +56,7 @@ public class MainActivity  extends BlunoLibrary {
         buttonScan = (Button) findViewById(R.id.buttonScan);					//initial the button for scanning the BLE device
         this.launchExperiment = (Button) findViewById(R.id.launchExperiment);
         this.launchExperiment.setVisibility(View.INVISIBLE);
-        this.stopExperiment = (Button) findViewById(R.id.endExperiment);
-        this.stopExperiment.setVisibility(View.INVISIBLE);
+
 
 
 	}
@@ -199,28 +198,28 @@ public class MainActivity  extends BlunoLibrary {
         System.out.println("Let's launch it!");
         this.experimentOn = true;
         this.timestamp = System.currentTimeMillis();
-        this.stopExperiment.setVisibility(View.VISIBLE);
+        //this.stopExperiment.setVisibility(View.VISIBLE);
 
-        try {
+        /*try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        this.soundStimulus.playSound(0);
+        this.soundStimulus.playSound(0);*/
     }
 
     public void logArduino (String theString)
     {
         long now = System.currentTimeMillis();
-        if (this.experimentOn) {
+        if (this.experimentOn && this.trialOn) {
             double tstp = (now - this.timestamp) / 1000d;
             this.pw_stimuli.println(tstp + "," + theString);
             this.pw_stimuli.flush();
         }
     }
 
-    public void endExperiment(View view)
+    public void endExperiment()
     {
         this.pw_stimuli.println("End of experiment!");
         this.pw_stimuli.flush();
@@ -229,4 +228,7 @@ public class MainActivity  extends BlunoLibrary {
         System.exit(0);
     }
 
+    public void setTrials(boolean b) {
+        this.trialOn = b;
+    }
 }

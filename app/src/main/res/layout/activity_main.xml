@@ -102,13 +102,6 @@
             android:id="@+id/launchExperiment"
             android:onClick="launchExperiment" />
 
-        <Button
-            android:text="End Experiment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/endExperiment"
-            android:onClick="endExperiment" />
-
     </LinearLayout>
 
 </RelativeLayout>
