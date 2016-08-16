@@ -124,7 +124,10 @@ public class MainActivity  extends BlunoLibrary {
 	public void onSerialReceived(String theString) {                            //Once connection data received, this function will be called
         // TODO Auto-generated method stub
         receivedString = theString;
-        this.logArduino(theString);
+        if (this.experimentOn && this.trialOn) {
+            this.setTrials(false);
+            this.logArduino(theString);
+        }
     }
 
 
@@ -164,7 +167,7 @@ public class MainActivity  extends BlunoLibrary {
             try {
                 this.pw_stimuli = new PrintWriter(new FileOutputStream(file));
 
-                this.pw_stimuli.println("Time,Stimulus,Recognized,Correct,StimulusRepetitions");
+                this.pw_stimuli.println("Time,Block,Trial,Speed,Stimulus,Recognized,Correct,StimulusRepetitions");
                 this.pw_stimuli.flush();
                 System.out.println("Created new stimulus file");
                 this.pw_biodata = new PrintWriter(new FileOutputStream(file2));
@@ -211,24 +214,28 @@ public class MainActivity  extends BlunoLibrary {
         this.soundStimulus.playSound(0);*/
     }
 
-    public void logArduino (String theString)
-    {
+    public void logArduino (String theString) {
+        theString = theString.replaceAll("(\\r|\\n)", "");
+        int selected = Integer.parseInt(theString);
+        this.soundStimulus.unlockThread(selected);
         long now = System.currentTimeMillis();
-        if (this.experimentOn && this.trialOn) {
-            double tstp = (now - this.timestamp) / 1000d;
-            int selected = Integer.parseInt(theString);
-            int current = this.soundStimulus.getCurrentStimulus();
-            this.pw_stimuli.println(tstp + ","
-                    + current + ","
-                    + selected + ","
-                    + (current == selected) + ","
-                    + this.soundStimulus.getStimRepeat()
-            );
-            this.pw_stimuli.flush();
+        double tstp = (now - this.timestamp) / 1000d;
+        int current = this.soundStimulus.getCurrentStimulus();
+        this.pw_stimuli.println(tstp + ","
+                + this.block + ","
+                + this.soundStimulus.getTrialNumber() + ","
+                + this.speed + ","
+                + current + ","
+                + selected + ","
+                + (current == selected) + ","
+                + this.soundStimulus.getStimRepeat()
+        );
+        this.pw_stimuli.flush();
 
-            // TODO UNLOCK THE DAMN THREAD
-            this.soundStimulus.unlockThread(selected);
-        }
+        // TODO UNLOCK THE DAMN THREAD
+        this.soundStimulus.unlockThread(selected);
+
+
     }
 
     public void endExperiment()
@@ -241,6 +248,12 @@ public class MainActivity  extends BlunoLibrary {
     }
 
     public void setTrials(boolean b) {
+        System.out.println("trialOn=" + b);
         this.trialOn = b;
+    }
+
+    public void newTimeStamp()
+    {
+        this.timestamp = System.currentTimeMillis();
     }
 }

@@ -33,6 +33,7 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
 
     private boolean unlock = false;
     private int selected = -1;
+    private int trialNumber = 0;
 
     public Stimulus (MainActivity _context)
     {
@@ -79,9 +80,12 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         {
             soundPool.load(this.mContext, soundStimuli[i], i);
         }
+        soundPool.load(this.mContext, R.raw.correct, this.NB_STIMULI+1);
+        soundPool.load(this.mContext, R.raw.incorrect, this.NB_STIMULI+2);
+        soundPool.load(this.mContext, R.raw.end, this.NB_STIMULI+3);
     }
 
-    public void playSound(int stimulus)
+    public synchronized void playSound(int stimulus)
     {
 
         if (soundPool == null)
@@ -89,13 +93,13 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             this.initSounds();
         }
         float volume = 1.0f;
-        soundPool.play(soundStimuli[stimulus], volume, volume, 1, 0, 1f);
+        soundPool.play(stimuli[stimulus-1], volume, volume, 1, 0, 1f);
 
     }
 
-    public void playFeedback(boolean b)
+    public synchronized void playFeedback(boolean b)
     {
-        int index = this.NB_STIMULI;
+        int index = this.NB_STIMULI+1;
         index += (b?0:1);
         if (soundPool == null)
         {
@@ -104,6 +108,16 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         float volume = 1.0f;
         soundPool.play(index, volume, volume, 1, 0, 1f);
 
+    }
+
+    public void playEndExperiment()
+    {
+        if (soundPool == null)
+        {
+            this.initSounds();
+        }
+        float volume = 1.0f;
+        soundPool.play(this.NB_STIMULI+3, volume, volume, 1, 0, 1f);
     }
 
     @Override
@@ -120,27 +134,43 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             this.mContext.setTrials(true);
             this.stimRepeat = 0;
             int i = itg.intValue();
+            System.out.println("Stimulus:" + i);
+            this.trialNumber++;
             this.currentStimulus = i;
+            this.mContext.newTimeStamp();
             this.playSound(i);
             long now = System.currentTimeMillis();
             while (!this.unlock)
             {
-                long delay = System.currentTimeMillis() - now;
+                /*long delay = System.currentTimeMillis() - now;
                 //If no answer within 3000 ms, repeat
                 if (delay >= 3000)
                 {
                     now = delay;
                     this.playSound(i);
                     this.stimRepeat++;
+                }*/
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
             this.mContext.setTrials(false);
+            this.unlock = false;
+            System.out.println("Recognized: " + this.selected);
             this.playFeedback(this.selected == i);
             try {
                 Thread.sleep(2500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        this.playEndExperiment();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         this.mContext.endExperiment();
 
@@ -162,5 +192,10 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     public int getStimRepeat()
     {
         return this.stimRepeat;
+    }
+
+    public int getTrialNumber()
+    {
+        return this.trialNumber;
     }
 }
