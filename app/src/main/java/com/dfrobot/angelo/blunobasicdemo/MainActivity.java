@@ -164,7 +164,7 @@ public class MainActivity  extends BlunoLibrary {
             try {
                 this.pw_stimuli = new PrintWriter(new FileOutputStream(file));
 
-                this.pw_stimuli.println("Time,Stimulus,Recognized,Correct");
+                this.pw_stimuli.println("Time,Stimulus,Recognized,Correct,StimulusRepetitions");
                 this.pw_stimuli.flush();
                 System.out.println("Created new stimulus file");
                 this.pw_biodata = new PrintWriter(new FileOutputStream(file2));
@@ -198,6 +198,8 @@ public class MainActivity  extends BlunoLibrary {
         System.out.println("Let's launch it!");
         this.experimentOn = true;
         this.timestamp = System.currentTimeMillis();
+        // Actually starting experiment
+        this.soundStimulus.start();
         //this.stopExperiment.setVisibility(View.VISIBLE);
 
         /*try {
@@ -214,8 +216,18 @@ public class MainActivity  extends BlunoLibrary {
         long now = System.currentTimeMillis();
         if (this.experimentOn && this.trialOn) {
             double tstp = (now - this.timestamp) / 1000d;
-            this.pw_stimuli.println(tstp + "," + theString);
+            int selected = Integer.parseInt(theString);
+            int current = this.soundStimulus.getCurrentStimulus();
+            this.pw_stimuli.println(tstp + ","
+                    + current + ","
+                    + selected + ","
+                    + (current == selected) + ","
+                    + this.soundStimulus.getStimRepeat()
+            );
             this.pw_stimuli.flush();
+
+            // TODO UNLOCK THE DAMN THREAD
+            this.soundStimulus.unlockThread(selected);
         }
     }
 

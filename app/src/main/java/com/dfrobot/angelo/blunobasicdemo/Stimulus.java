@@ -25,6 +25,9 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     private MainActivity mContext;
     private MediaPlayer mp = null;
 
+    private int currentStimulus = -1;
+    private int stimRepeat = 0;
+
     // Make sure to match soundStimuli size and this value
     public static final int NB_STIMULI = 12;
 
@@ -115,12 +118,23 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         for (Integer itg: trials)
         {
             this.mContext.setTrials(true);
+            this.stimRepeat = 0;
             int i = itg.intValue();
+            this.currentStimulus = i;
             this.playSound(i);
+            long now = System.currentTimeMillis();
             while (!this.unlock)
             {
-
+                long delay = System.currentTimeMillis() - now;
+                //If no answer within 3000 ms, repeat
+                if (delay >= 3000)
+                {
+                    now = delay;
+                    this.playSound(i);
+                    this.stimRepeat++;
+                }
             }
+            this.mContext.setTrials(false);
             this.playFeedback(this.selected == i);
             try {
                 Thread.sleep(2500);
@@ -138,5 +152,15 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         this.selected = _selected;
         this.unlock = true;
 
+    }
+
+    public int getCurrentStimulus()
+    {
+        return this.currentStimulus;
+    }
+
+    public int getStimRepeat()
+    {
+        return this.stimRepeat;
     }
 }
