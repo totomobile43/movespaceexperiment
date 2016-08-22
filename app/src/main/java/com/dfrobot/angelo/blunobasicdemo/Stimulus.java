@@ -19,6 +19,8 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     public static final int[] stimuli = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     public static final int NB_REPETITIONS = 3;
 
+    private int lastStream = -1;
+
     public static List<Integer> trials = new ArrayList<Integer>();
 
     private static SoundPool soundPool;
@@ -93,7 +95,8 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             this.initSounds();
         }
         float volume = 1.0f;
-        soundPool.play(stimuli[stimulus-1], volume, volume, 1, 0, 1f);
+        this.stopPreviousStream();
+        this.lastStream = soundPool.play(stimuli[stimulus-1], volume, volume, 1, 0, 1f);
 
     }
 
@@ -106,7 +109,8 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             this.initSounds();
         }
         float volume = 1.0f;
-        soundPool.play(index, volume, volume, 1, 0, 1f);
+        this.stopPreviousStream();
+        this.lastStream = soundPool.play(index, volume, volume, 1, 0, 1f);
 
     }
 
@@ -117,7 +121,8 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             this.initSounds();
         }
         float volume = 1.0f;
-        soundPool.play(this.NB_STIMULI+3, volume, volume, 1, 0, 1f);
+        this.stopPreviousStream();
+        this.lastStream = soundPool.play(this.NB_STIMULI+3, volume, volume, 1, 0, 1f);
     }
 
     @Override
@@ -142,14 +147,14 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             long now = System.currentTimeMillis();
             while (!this.unlock)
             {
-                /*long delay = System.currentTimeMillis() - now;
+                long delay = System.currentTimeMillis() - now;
                 //If no answer within 3000 ms, repeat
                 if (delay >= 3000)
                 {
                     now = delay;
                     this.playSound(i);
                     this.stimRepeat++;
-                }*/
+                }
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
@@ -197,5 +202,13 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     public int getTrialNumber()
     {
         return this.trialNumber;
+    }
+
+    public void stopPreviousStream()
+    {
+        if (this.lastStream != -1)
+        {
+            soundPool.stop(this.lastStream);
+        }
     }
 }
