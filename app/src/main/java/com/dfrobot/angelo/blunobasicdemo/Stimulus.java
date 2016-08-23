@@ -18,6 +18,7 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     public static final int[] soundStimuli = { R.raw.s1, R.raw.s2, R.raw.s3, R.raw.s4, R.raw.s5, R.raw.s6, R.raw.s7, R.raw.s8, R.raw.s9, R.raw.s10, R.raw.s11, R.raw.s12 };
     public static final int[] stimuli = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     public static final int NB_REPETITIONS = 3;
+    public static final int SLEEP_DELAY = 200;
 
     private int lastStream = -1;
 
@@ -36,6 +37,8 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     private boolean unlock = false;
     private int selected = -1;
     private int trialNumber = 0;
+
+    private boolean logFalsePositives = false;
 
     public Stimulus (MainActivity _context)
     {
@@ -133,28 +136,54 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     @Override
     public void run()
     {
+
+        try {
+            Thread.sleep(SLEEP_DELAY);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         // Start block
-        for (Integer itg: trials)
-        {
-            this.mContext.setTrials(true);
-            this.stimRepeat = 0;
-            int i = itg.intValue();
-            System.out.println("Stimulus:" + i);
-            this.trialNumber++;
-            this.currentStimulus = i;
-            this.mContext.newTimeStamp();
-            this.playSound(i);
-            long now = System.currentTimeMillis();
-            while (!this.unlock)
-            {
-                long delay = System.currentTimeMillis() - now;
+        if (!this.logFalsePositives) {
+            for (Integer itg : trials) {
+                this.mContext.setTrials(true);
+                this.stimRepeat = 0;
+                int i = itg.intValue();
+                System.out.println("Stimulus:" + i);
+                this.trialNumber++;
+                this.currentStimulus = i;
+                this.mContext.newTimeStamp();
+                this.playSound(i);
+                long now = System.currentTimeMillis();
+                while (!this.unlock) {
+                /*long delay = System.currentTimeMillis() - now;
                 //If no answer within 3000 ms, repeat
                 if (delay >= 3000)
                 {
                     now = delay;
                     this.playSound(i);
                     this.stimRepeat++;
+                }*/
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                this.mContext.setTrials(false);
+                this.unlock = false;
+                System.out.println("Recognized: " + this.selected);
+                this.playFeedback(this.selected == i);
+                try {
+                    Thread.sleep(2500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        else
+        {
+            this.mContext.setTrials(true);
+            for (int i=0; i<3500; i++) {
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
@@ -162,14 +191,6 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
                 }
             }
             this.mContext.setTrials(false);
-            this.unlock = false;
-            System.out.println("Recognized: " + this.selected);
-            this.playFeedback(this.selected == i);
-            try {
-                Thread.sleep(2500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         this.playEndExperiment();
         try {
@@ -210,5 +231,9 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         {
             soundPool.stop(this.lastStream);
         }
+    }
+
+    public void setFalsePositives() {
+        this.logFalsePositives = true;
     }
 }

@@ -19,6 +19,7 @@ import java.io.PrintWriter;
 public class MainActivity  extends BlunoLibrary {
 	private Button buttonScan;
     private Button launchExperiment;
+    private Button falsePositives;
 	private String receivedString;
 	private String participant;
     private String speed;
@@ -56,6 +57,8 @@ public class MainActivity  extends BlunoLibrary {
         buttonScan = (Button) findViewById(R.id.buttonScan);					//initial the button for scanning the BLE device
         this.launchExperiment = (Button) findViewById(R.id.launchExperiment);
         this.launchExperiment.setVisibility(View.INVISIBLE);
+        this.falsePositives = (Button) findViewById(R.id.falsePositives);
+        this.falsePositives.setVisibility(View.INVISIBLE);
 
 
 
@@ -125,7 +128,7 @@ public class MainActivity  extends BlunoLibrary {
         // TODO Auto-generated method stub
         receivedString = theString;
         if (this.experimentOn && this.trialOn) {
-            this.setTrials(false);
+            //this.setTrials(false);
             this.logArduino(theString);
         }
     }
@@ -188,10 +191,12 @@ public class MainActivity  extends BlunoLibrary {
         if (this.filesOK && this.connectionOK)
         {
             this.launchExperiment.setVisibility(View.VISIBLE);
+            this.falsePositives.setVisibility(View.VISIBLE);
         }
         else
         {
             this.launchExperiment.setVisibility(View.INVISIBLE);
+            this.falsePositives.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -212,6 +217,15 @@ public class MainActivity  extends BlunoLibrary {
         }
 
         this.soundStimulus.playSound(0);*/
+    }
+
+    public void falsePositives(View view)
+    {
+        System.out.println("Let's launch it!");
+        this.experimentOn = true;
+        this.timestamp = System.currentTimeMillis();
+        this.soundStimulus.setFalsePositives();
+        this.soundStimulus.start();
     }
 
     public void logArduino (String theString) {
