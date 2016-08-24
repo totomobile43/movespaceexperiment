@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.content.Intent;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -20,6 +21,8 @@ public class MainActivity  extends BlunoLibrary {
 	private Button buttonScan;
     private Button launchExperiment;
     private Button falsePositives;
+    private Button confirmParticipant;
+
 	private String receivedString;
 	private String participant;
     private String speed;
@@ -39,6 +42,7 @@ public class MainActivity  extends BlunoLibrary {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
 
         this.soundStimulus = new Stimulus(this);
@@ -59,6 +63,8 @@ public class MainActivity  extends BlunoLibrary {
         this.launchExperiment.setVisibility(View.INVISIBLE);
         this.falsePositives = (Button) findViewById(R.id.falsePositives);
         this.falsePositives.setVisibility(View.INVISIBLE);
+
+        this.confirmParticipant = (Button) findViewById(R.id.confirmParticipant);
 
 
 
@@ -91,7 +97,8 @@ public class MainActivity  extends BlunoLibrary {
     
 	@Override
     protected void onDestroy() {
-        super.onDestroy();	
+        super.onDestroy();
+
         onDestroyProcess();														//onDestroy Process by BlunoLibrary
     }
 
@@ -204,6 +211,8 @@ public class MainActivity  extends BlunoLibrary {
     public void launchExperiment(View view)
     {
         System.out.println("Let's launch it!");
+        this.disableButtons();
+        this.launchExperiment.setText("Block in Progress!");
         this.experimentOn = true;
         this.timestamp = System.currentTimeMillis();
         // Actually starting experiment
@@ -222,6 +231,8 @@ public class MainActivity  extends BlunoLibrary {
     public void falsePositives(View view)
     {
         System.out.println("Let's launch it!");
+        this.falsePositives.setText("False Pos. in Progress!");
+        this.disableButtons();
         this.experimentOn = true;
         this.timestamp = System.currentTimeMillis();
         this.soundStimulus.setFalsePositives();
@@ -269,5 +280,13 @@ public class MainActivity  extends BlunoLibrary {
     public void newTimeStamp()
     {
         this.timestamp = System.currentTimeMillis();
+    }
+
+    public void disableButtons()
+    {
+        this.launchExperiment.setEnabled(false);
+        this.falsePositives.setEnabled(false);
+        this.buttonScan.setEnabled(false);
+        this.confirmParticipant.setEnabled(false);
     }
 }
