@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class MainActivity  extends BlunoLibrary {
 	private Button buttonScan;
@@ -27,7 +28,6 @@ public class MainActivity  extends BlunoLibrary {
 	private String participant;
     private String speed;
     private String block;
-	private PrintWriter pw_biodata = null;
 	private PrintWriter pw_stimuli = null;
 
     private boolean experimentOn = false;
@@ -36,6 +36,8 @@ public class MainActivity  extends BlunoLibrary {
     private boolean trialOn = false;
 
     private Stimulus soundStimulus;
+
+    private ArrayList<String> trials = new ArrayList<String>();
 
     private long timestamp;
 
@@ -132,7 +134,6 @@ public class MainActivity  extends BlunoLibrary {
 
 	@Override
 	public void onSerialReceived(String theString) {                            //Once connection data received, this function will be called
-        // TODO Auto-generated method stub
         receivedString = theString;
         if (this.experimentOn && this.trialOn) {
             //this.setTrials(false);
@@ -161,18 +162,12 @@ public class MainActivity  extends BlunoLibrary {
                     + "_S" + this.speed
                     + "_B" + this.block
                     + "_stimuli.csv");
-            File file2 = new File(path, "P" + this.participant
-                    + "_S" + this.speed
-                    + "_B" + this.block
-                    + "_biodata.csv");
+
             if (file.exists()) {
                 file.delete();
                 System.out.println("Deleted stimulus file");
             }
-            if (file2.exists()) {
-                file2.delete();
-                System.out.println("Deleted biodata file");
-            }
+
 
             try {
                 this.pw_stimuli = new PrintWriter(new FileOutputStream(file));
@@ -180,10 +175,6 @@ public class MainActivity  extends BlunoLibrary {
                 this.pw_stimuli.println("Time,Block,Trial,Speed,Stimulus,Recognized,Correct,StimulusRepetitions");
                 this.pw_stimuli.flush();
                 System.out.println("Created new stimulus file");
-                this.pw_biodata = new PrintWriter(new FileOutputStream(file2));
-                this.pw_biodata.println("Time,Sensor,Value");
-                this.pw_biodata.flush();
-                System.out.println("Created new biodata file");
                 this.updateLaunchExperiment(this.connectionOK, true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -215,9 +206,8 @@ public class MainActivity  extends BlunoLibrary {
         this.launchExperiment.setText("Block in Progress!");
         this.experimentOn = true;
         this.timestamp = System.currentTimeMillis();
-        // Actually starting experiment
+
         this.soundStimulus.start();
-        //this.stopExperiment.setVisibility(View.VISIBLE);
 
         /*try {
             Thread.sleep(3000);
@@ -246,15 +236,15 @@ public class MainActivity  extends BlunoLibrary {
         long now = System.currentTimeMillis();
         double tstp = (now - this.timestamp) / 1000d;
         int current = this.soundStimulus.getCurrentStimulus();
-        this.pw_stimuli.println(tstp + ","
+        String trial = tstp + ","
                 + this.block + ","
                 + this.soundStimulus.getTrialNumber() + ","
                 + this.speed + ","
                 + current + ","
                 + selected + ","
                 + (current == selected) + ","
-                + this.soundStimulus.getStimRepeat()
-        );
+                + this.soundStimulus.getStimRepeat();
+        this.trials.add(trial);
         this.pw_stimuli.flush();
 
         // TODO UNLOCK THE DAMN THREAD
@@ -265,10 +255,13 @@ public class MainActivity  extends BlunoLibrary {
 
     public void endExperiment()
     {
+        for (String s: this.trials)
+        {
+            this.pw_stimuli.println(s);
+        }
         this.pw_stimuli.println("End of experiment!");
         this.pw_stimuli.flush();
         this.pw_stimuli.close();
-        this.pw_biodata.close();
         System.exit(0);
     }
 
