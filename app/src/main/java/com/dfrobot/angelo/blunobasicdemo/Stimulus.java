@@ -21,11 +21,11 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
      */
 
     public static final int[] soundStimuli = { R.raw.s1, R.raw.s2, R.raw.s3, R.raw.s4, R.raw.s5, R.raw.s6, R.raw.s7, R.raw.s8, R.raw.s9, R.raw.s10, R.raw.s12 };
-    public static final int[] stimuli = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12};
+    public static final int[] stimuli = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
     // Make sure to match soundStimuli size and this value
     public static final int NB_STIMULI = 11;
-    public static final int NB_REPETITIONS = 5;
+    public static final int NB_REPETITIONS = 1;
 
     public static final int SLEEP_DELAY = 20000;
     public static final int INTERTRIAL_DELAY = 2500;
@@ -107,7 +107,7 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         }
         float volume = 1.0f;
         this.stopPreviousStream();
-        this.lastStream = soundPool.play(stimuli[stimulus-1], volume, volume, 1, 0, 1f);
+        this.lastStream = soundPool.play(stimuli[stimulus - 1], volume, volume, 1, 0, 1f);
 
     }
 
@@ -161,7 +161,13 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
                 this.currentStimulus = i;
                 this.mContext.newTimeStamp();
                 this.playSound(i);
+
                 long now = System.currentTimeMillis();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 while (!this.unlock) {
                 /*long delay = System.currentTimeMillis() - now;
                 //If no answer within 3000 ms, repeat
