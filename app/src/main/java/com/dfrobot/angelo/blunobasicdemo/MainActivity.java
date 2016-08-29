@@ -158,7 +158,7 @@ public class MainActivity  extends BlunoLibrary {
         if (!this.participant.isEmpty()) {
             String path = Environment.getExternalStorageDirectory().getPath();
 
-            File file = new File(path, "P" + this.participant
+            File file = new File(path, "P_" + this.participant
                     + "_S" + this.speed
                     + "_B" + this.block
                     + "_stimuli.csv");
