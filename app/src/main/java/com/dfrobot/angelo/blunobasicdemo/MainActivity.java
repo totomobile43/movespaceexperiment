@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -23,6 +25,7 @@ public class MainActivity  extends BlunoLibrary {
     private Button launchExperiment;
     private Button falsePositives;
     private Button confirmParticipant;
+    private TextView bluetoothDebug;
 
 	private String receivedString;
 	private String participant;
@@ -49,6 +52,8 @@ public class MainActivity  extends BlunoLibrary {
 
         this.soundStimulus = new Stimulus(this);
         this.soundStimulus.initSounds();
+
+        this.bluetoothDebug = (TextView) findViewById(R.id.bluetoothDebug);
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -135,6 +140,15 @@ public class MainActivity  extends BlunoLibrary {
 	@Override
 	public void onSerialReceived(String theString) {                            //Once connection data received, this function will be called
         receivedString = theString;
+
+        this.runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
+                bluetoothDebug.setText(receivedString);
+            }
+        });
+
         if (this.experimentOn && this.trialOn) {
             //this.setTrials(false);
             this.logArduino(theString);
