@@ -23,16 +23,20 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     public static final int[] soundStimuli = { R.raw.s1, R.raw.s2, R.raw.s3, R.raw.s4, R.raw.s5, R.raw.s6, R.raw.s7, R.raw.s8, R.raw.s9, R.raw.s10, R.raw.s12 };
     public static final int[] stimuli = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
+
     // Make sure to match soundStimuli size and this value
     public static final int NB_STIMULI = 11;
     public static final int NB_REPETITIONS = 5;
+    public static final int NB_BLOCKS = 5;
 
     public static final int SLEEP_DELAY = 20000;
     public static final int INTERTRIAL_DELAY = 2500;
 
     private int lastStream = -1;
 
-    public static List<Integer> trials = new ArrayList<Integer>();
+    private int blockNumber;
+
+    public static List<List<Integer>> trials = new ArrayList<>();
 
     private static SoundPool soundPool;
     private MainActivity mContext;
@@ -48,18 +52,23 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
 
     private boolean logFalsePositives = false;
 
-    public Stimulus (MainActivity _context)
-    {
+    public Stimulus (MainActivity _context) {
+
 
         this.mContext = _context;
-        for (int i = 0; i < NB_REPETITIONS; i++)
-        {
-            for (int j=0; j < stimuli.length; j++)
-            {
-                trials.add(stimuli[j]);
+
+        for (int a=0; a < NB_BLOCKS; a++) {
+
+            List<Integer> currentBlock = new ArrayList<Integer>();
+
+            for (int i = 0; i < NB_REPETITIONS; i++) {
+                for (int j = 0; j < stimuli.length; j++) {
+                    currentBlock.add(stimuli[j]);
+                }
             }
+            Collections.shuffle(currentBlock);
+            trials.add(currentBlock);
         }
-        Collections.shuffle(trials);
     }
 
     /*
@@ -145,14 +154,18 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     public void run()
     {
 
-        try {
-            Thread.sleep(SLEEP_DELAY);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        // Start block
-        if (!this.logFalsePositives) {
-            for (Integer itg : trials) {
+        for (int bl = 0; bl < NB_BLOCKS; bl++) {
+            this.blockNumber = bl;
+            List<Integer> myBlock = trials.get(bl);
+
+            try {
+                Thread.sleep(SLEEP_DELAY);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // Start block
+            //if (!this.logFalsePositives) {
+            for (Integer itg : myBlock) {
                 this.mContext.setTrials(true);
                 this.stimRepeat = 0;
                 int i = itg.intValue();
@@ -193,11 +206,15 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
                     e.printStackTrace();
                 }
             }
-        }
-        else
-        {
+            this.mContext.flushLogs();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            this.currentStimulus = -1;
             this.mContext.setTrials(true);
-            for (int i=0; i<3500; i++) {
+            for (int i = 0; i < 3500; i++) {
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
@@ -205,10 +222,13 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
                 }
             }
             this.mContext.setTrials(false);
+            this.mContext.flushLogs();
         }
+    // End of experiment
+
         this.playEndExperiment();
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -246,6 +266,8 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             soundPool.stop(this.lastStream);
         }
     }
+
+    public int getBlockNumber() { return this.blockNumber; }
 
     public void setFalsePositives() {
         this.logFalsePositives = true;

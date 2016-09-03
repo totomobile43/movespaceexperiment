@@ -29,8 +29,7 @@ public class MainActivity  extends BlunoLibrary {
 
 	private String receivedString;
 	private String participant;
-    private String speed;
-    private String block;
+
 	private PrintWriter pw_stimuli = null;
 
     private boolean experimentOn = false;
@@ -166,16 +165,13 @@ public class MainActivity  extends BlunoLibrary {
         EditText participant_id = (EditText) findViewById(R.id.participantID);
         EditText speed_id = (EditText) findViewById(R.id.conditionID);
         EditText block_id = (EditText) findViewById(R.id.blockID);
-        this.speed = speed_id.getText().toString();
-        this.block = block_id.getText().toString();
+
         this.participant = participant_id.getText().toString();
         if (!this.participant.isEmpty()) {
             String path = Environment.getExternalStorageDirectory().getPath();
 
             File file = new File(path, "P_" + this.participant
-                    + "_S" + this.speed
-                    + "_B" + this.block
-                    + "_stimuli.csv");
+                    + "_ecological_stimuli.csv");
 
             if (file.exists()) {
                 file.delete();
@@ -186,7 +182,7 @@ public class MainActivity  extends BlunoLibrary {
             try {
                 this.pw_stimuli = new PrintWriter(new FileOutputStream(file));
 
-                this.pw_stimuli.println("Time,Block,Trial,Speed,Stimulus,Recognized,Correct,StimulusRepetitions");
+                this.pw_stimuli.println("Time,Block,Trial,Stimulus,Recognized,Correct,StimulusRepetitions");
                 this.pw_stimuli.flush();
                 System.out.println("Created new stimulus file");
                 this.updateLaunchExperiment(this.connectionOK, true);
@@ -251,9 +247,8 @@ public class MainActivity  extends BlunoLibrary {
         double tstp = (now - this.timestamp) / 1000d;
         int current = this.soundStimulus.getCurrentStimulus();
         String trial = tstp + ","
-                + this.block + ","
+                + this.soundStimulus.getBlockNumber() + ","
                 + this.soundStimulus.getTrialNumber() + ","
-                + this.speed + ","
                 + current + ","
                 + selected + ","
                 + (current == selected) + ","
@@ -265,6 +260,16 @@ public class MainActivity  extends BlunoLibrary {
         this.soundStimulus.unlockThread(selected);
 
 
+    }
+
+    public void flushLogs()
+    {
+        for (String s: this.trials)
+        {
+            this.pw_stimuli.println(s);
+        }
+        this.pw_stimuli.flush();
+        this.trials = new ArrayList<>();
     }
 
     public void endExperiment()
@@ -296,4 +301,6 @@ public class MainActivity  extends BlunoLibrary {
         this.buttonScan.setEnabled(false);
         this.confirmParticipant.setEnabled(false);
     }
+
+
 }
