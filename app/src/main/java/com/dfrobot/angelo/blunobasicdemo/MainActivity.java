@@ -26,6 +26,7 @@ public class MainActivity  extends BlunoLibrary {
     private Button falsePositives;
     private Button confirmParticipant;
     private TextView bluetoothDebug;
+    public TextView expeDebug;
 
 	private String receivedString;
 	private String participant;
@@ -53,6 +54,7 @@ public class MainActivity  extends BlunoLibrary {
         this.soundStimulus.initSounds();
 
         this.bluetoothDebug = (TextView) findViewById(R.id.bluetoothDebug);
+        this.expeDebug = (TextView) findViewById(R.id.expeDebug);
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

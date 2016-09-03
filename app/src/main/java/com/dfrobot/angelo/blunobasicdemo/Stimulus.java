@@ -166,11 +166,20 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             // Start block
             //if (!this.logFalsePositives) {
             for (Integer itg : myBlock) {
+
+
                 this.mContext.setTrials(true);
                 this.stimRepeat = 0;
                 int i = itg.intValue();
                 System.out.println("Stimulus:" + i);
                 this.trialNumber++;
+                this.mContext.runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+                        mContext.expeDebug.setText("Block #" + blockNumber + ", Trial #" + trialNumber);
+                    }
+                });
                 this.currentStimulus = i;
                 this.mContext.newTimeStamp();
                 this.playSound(i);
@@ -214,6 +223,13 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             }
             this.currentStimulus = -1;
             this.mContext.setTrials(true);
+            this.mContext.runOnUiThread(new Runnable()
+            {
+                public void run()
+                {
+                    mContext.expeDebug.setText("False Positives");
+                }
+            });
             for (int i = 0; i < 3500; i++) {
                 try {
                     Thread.sleep(50);
