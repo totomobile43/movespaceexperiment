@@ -30,6 +30,8 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     public static final int SLEEP_DELAY = 20000;
     public static final int INTERTRIAL_DELAY = 2500;
 
+    private boolean stopFalsePositives = false;
+
     private int lastStream = -1;
 
     public static List<Integer> trials = new ArrayList<Integer>();
@@ -196,8 +198,11 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         }
         else
         {
+
             this.mContext.setTrials(true);
-            for (int i=0; i<3500; i++) {
+
+            while(!this.stopFalsePositives)
+            {
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
@@ -229,15 +234,6 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         return this.currentStimulus;
     }
 
-    public int getStimRepeat()
-    {
-        return this.stimRepeat;
-    }
-
-    public int getTrialNumber()
-    {
-        return this.trialNumber;
-    }
 
     public void stopPreviousStream()
     {
@@ -249,5 +245,10 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
 
     public void setFalsePositives() {
         this.logFalsePositives = true;
+    }
+
+    public void stopFalsePositives()
+    {
+        this.stopFalsePositives = true;
     }
 }

@@ -40,51 +40,6 @@
                 android:ems="10"
                 android:id="@+id/participantID"
                 android:maxLength="10" />
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Speed Condition:"
-                android:layout_width="91dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/textCondition"
-                android:layout_weight="1" />
-
-            <EditText
-                android:layout_width="201dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/conditionID"
-                android:maxLength="4" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Block Number:"
-                android:layout_width="91dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/textBlock"
-                android:layout_weight="1" />
-
-            <EditText
-                android:layout_width="201dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/blockID"
-                android:maxLength="4" />
-
             <Button
                 android:text="OK"
                 android:layout_width="wrap_content"
@@ -93,6 +48,8 @@
                 android:onClick="createLogFiles" />
 
         </LinearLayout>
+
+
 
 
         <Button
@@ -104,11 +61,11 @@
 
 
         <Button
-            android:text="Launch Experiment"
+            android:text="Stop False Positives"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/launchExperiment"
-            android:onClick="launchExperiment" />
+            android:id="@+id/stopFalsePositives"
+            android:onClick="stopFalsePositives" />
 
         <TextView
             android:text="-1"
