@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class MainActivity  extends BlunoLibrary {
 	private Button buttonScan;
     private Button launchExperiment;
-    private Button falsePositives;
     private Button confirmParticipant;
     private TextView bluetoothDebug;
     public TextView expeDebug;
@@ -69,8 +68,6 @@ public class MainActivity  extends BlunoLibrary {
         buttonScan = (Button) findViewById(R.id.buttonScan);					//initial the button for scanning the BLE device
         this.launchExperiment = (Button) findViewById(R.id.launchExperiment);
         this.launchExperiment.setVisibility(View.INVISIBLE);
-        this.falsePositives = (Button) findViewById(R.id.falsePositives);
-        this.falsePositives.setVisibility(View.INVISIBLE);
 
         this.confirmParticipant = (Button) findViewById(R.id.confirmParticipant);
 
@@ -165,8 +162,7 @@ public class MainActivity  extends BlunoLibrary {
 	public void createLogFiles(View view)
 	{
         EditText participant_id = (EditText) findViewById(R.id.participantID);
-        EditText speed_id = (EditText) findViewById(R.id.conditionID);
-        EditText block_id = (EditText) findViewById(R.id.blockID);
+
 
         this.participant = participant_id.getText().toString();
         if (!this.participant.isEmpty()) {
@@ -201,12 +197,12 @@ public class MainActivity  extends BlunoLibrary {
         if (this.filesOK && this.connectionOK)
         {
             this.launchExperiment.setVisibility(View.VISIBLE);
-            this.falsePositives.setVisibility(View.VISIBLE);
+            //this.falsePositives.setVisibility(View.VISIBLE);
         }
         else
         {
             this.launchExperiment.setVisibility(View.INVISIBLE);
-            this.falsePositives.setVisibility(View.INVISIBLE);
+            //this.falsePositives.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -230,16 +226,17 @@ public class MainActivity  extends BlunoLibrary {
         this.soundStimulus.playSound(0);*/
     }
 
+    /*
     public void falsePositives(View view)
     {
         System.out.println("Let's launch it!");
-        this.falsePositives.setText("False Pos. in Progress!");
+        //this.falsePositives.setText("False Pos. in Progress!");
         this.disableButtons();
         this.experimentOn = true;
         this.timestamp = System.currentTimeMillis();
         this.soundStimulus.setFalsePositives();
         this.soundStimulus.start();
-    }
+    }*/
 
     public void logArduino (String theString) {
         theString = theString.replaceAll("(\\r|\\n)", "");
@@ -274,6 +271,12 @@ public class MainActivity  extends BlunoLibrary {
         this.trials = new ArrayList<>();
     }
 
+    public void panicButton(View view)
+    {
+
+        this.endExperiment();
+    }
+
     public void endExperiment()
     {
         for (String s: this.trials)
@@ -299,7 +302,7 @@ public class MainActivity  extends BlunoLibrary {
     public void disableButtons()
     {
         this.launchExperiment.setEnabled(false);
-        this.falsePositives.setEnabled(false);
+        //this.falsePositives.setEnabled(false);
         this.buttonScan.setEnabled(false);
         this.confirmParticipant.setEnabled(false);
     }

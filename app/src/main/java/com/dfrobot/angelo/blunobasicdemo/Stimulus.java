@@ -26,10 +26,10 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
 
     // Make sure to match soundStimuli size and this value
     public static final int NB_STIMULI = 11;
-    public static final int NB_REPETITIONS = 5;
+    public static final int NB_REPETITIONS = 1;
     public static final int NB_BLOCKS = 5;
 
-    public static final int SLEEP_DELAY = 20000;
+    public static final int SLEEP_DELAY = 10000;
     public static final int INTERTRIAL_DELAY = 2500;
 
     private int lastStream = -1;

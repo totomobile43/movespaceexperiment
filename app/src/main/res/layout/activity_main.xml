@@ -73,6 +73,13 @@
             android:id="@+id/bluetoothDebug"
             android:textAlignment="center" />
 
+        <Button
+            android:text="Panic Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/panicButton"
+            android:onClick="panicButton" />
+
     </LinearLayout>
 
 </RelativeLayout>
