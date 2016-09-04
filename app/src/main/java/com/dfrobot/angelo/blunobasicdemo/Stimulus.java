@@ -40,7 +40,6 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
 
     private static SoundPool soundPool;
     private MainActivity mContext;
-    private MediaPlayer mp = null;
 
     private int currentStimulus = -1;
     private int stimRepeat = 0;
@@ -105,6 +104,7 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         soundPool.load(this.mContext, R.raw.correct, this.NB_STIMULI+1);
         soundPool.load(this.mContext, R.raw.incorrect, this.NB_STIMULI+2);
         soundPool.load(this.mContext, R.raw.end, this.NB_STIMULI+3);
+        soundPool.load(this.mContext, R.raw.block_start, this.NB_STIMULI+4);
     }
 
     public synchronized void playSound(int stimulus)
@@ -134,7 +134,7 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
 
     }
 
-    public void playEndExperiment()
+    public synchronized void playEndExperiment()
     {
         if (soundPool == null)
         {
@@ -143,6 +143,17 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         float volume = 1.0f;
         this.stopPreviousStream();
         this.lastStream = soundPool.play(this.NB_STIMULI+3, volume, volume, 1, 0, 1f);
+    }
+
+    public synchronized void playBeginning()
+    {
+        if (soundPool == null)
+        {
+            this.initSounds();
+        }
+        float volume = 1.0f;
+        this.stopPreviousStream();
+        this.lastStream = soundPool.play(this.NB_STIMULI+4, volume, volume, 1, 0, 1f);
     }
 
     @Override
@@ -165,6 +176,16 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             }
             // Start block
             //if (!this.logFalsePositives) {
+            this.playBeginning();
+            try
+            {
+                Thread.sleep(3500);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            this.trialNumber = 0;
             for (Integer itg : myBlock) {
 
 
@@ -221,16 +242,17 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
-            this.currentStimulus = -1;
-            this.mContext.setTrials(true);
+
+            /*this.currentStimulus = -1;
+            this.mContext.setTrials(true);*/
             this.mContext.runOnUiThread(new Runnable()
             {
                 public void run()
                 {
-                    mContext.expeDebug.setText("False Positives");
+                    mContext.expeDebug.setText("Break between Blocks");
                 }
             });
-            for (int i = 0; i < 3500; i++) {
+/*           for (int i = 0; i < 3500; i++) {
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
@@ -238,7 +260,15 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
                 }
             }
             this.mContext.setTrials(false);
-            this.mContext.flushLogs();
+            this.mContext.flushLogs();*/
+            try
+            {
+                Thread.sleep(57000);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     // End of experiment
 
@@ -285,7 +315,4 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
 
     public int getBlockNumber() { return this.blockNumber; }
 
-    public void setFalsePositives() {
-        this.logFalsePositives = true;
-    }
 }
