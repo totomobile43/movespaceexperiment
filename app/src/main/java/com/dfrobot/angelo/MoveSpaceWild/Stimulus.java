@@ -1,8 +1,7 @@
-package com.dfrobot.angelo.blunobasicdemo;
+package com.dfrobot.angelo.MoveSpaceWild;
 
 
 import android.media.AudioAttributes;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 
 import java.util.ArrayList;

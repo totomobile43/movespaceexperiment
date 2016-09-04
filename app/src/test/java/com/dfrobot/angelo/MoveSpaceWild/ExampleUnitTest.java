@@ -1,4 +1,4 @@
-package com.dfrobot.angelo.blunobasicdemo;
+package com.dfrobot.angelo.MoveSpaceWild;
 
 import org.junit.Test;
 

@@ -1,19 +1,13 @@
-package com.dfrobot.angelo.blunobasicdemo;
+package com.dfrobot.angelo.MoveSpaceWild;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.content.Intent;
 import android.os.Environment;
-import android.os.PowerManager;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -180,7 +174,7 @@ public class MainActivity  extends BlunoLibrary {
             try {
                 this.pw_stimuli = new PrintWriter(new FileOutputStream(file));
 
-                this.pw_stimuli.println("Time,Block,Trial,Stimulus,Recognized,Correct,StimulusRepetitions");
+                this.pw_stimuli.println("Timestamp,CompletionTime,Block,Trial,Stimulus,Recognized,Correct,StimulusRepetitions");
                 this.pw_stimuli.flush();
                 System.out.println("Created new stimulus file");
                 this.updateLaunchExperiment(this.connectionOK, true);
@@ -245,7 +239,8 @@ public class MainActivity  extends BlunoLibrary {
         long now = System.currentTimeMillis();
         double tstp = (now - this.timestamp) / 1000d;
         int current = this.soundStimulus.getCurrentStimulus();
-        String trial = tstp + ","
+        String trial = now + ","
+                + tstp + ","
                 + this.soundStimulus.getBlockNumber() + ","
                 + this.soundStimulus.getTrialNumber() + ","
                 + current + ","
