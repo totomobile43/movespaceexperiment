@@ -1,4 +1,4 @@
-package com.dfrobot.angelo.blunobasicdemo;
+package com.dfrobot.angelo.MoveSpaceFP;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
