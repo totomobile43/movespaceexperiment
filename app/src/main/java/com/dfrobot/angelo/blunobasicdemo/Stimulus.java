@@ -20,17 +20,20 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
         Change the value of NB_STIMULI
      */
 
-    public static final int[] soundStimuli = { R.raw.s1, R.raw.s2, R.raw.s3, R.raw.s4, R.raw.s5, R.raw.s6, R.raw.s7, R.raw.s8, R.raw.s9, R.raw.s10, R.raw.s12 };
-    public static final int[] stimuli = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    public static final int[] soundStimuli = { R.raw.s1, R.raw.s2, R.raw.s3, R.raw.s4, R.raw.s5, R.raw.s6 };
+          //  , R.raw.s7, R.raw.s8, R.raw.s9, R.raw.s10, R.raw.s12 };
+    public static final int[] stimuli = { 1, 2, 3, 4, 5, 6};
+                  //, 7, 8, 9, 10, 11};
 
 
     // Make sure to match soundStimuli size and this value
-    public static final int NB_STIMULI = 11;
-    public static final int NB_REPETITIONS = 1;
+    public static final int NB_STIMULI = 6;
+    public static final int NB_REPETITIONS = 5;
     public static final int NB_BLOCKS = 5;
 
     public static final int SLEEP_DELAY = 10000;
     public static final int INTERTRIAL_DELAY = 2500;
+    public static final int INTERBLOCK_DELAY = 57000;
 
     private int lastStream = -1;
 
@@ -263,7 +266,7 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
             this.mContext.flushLogs();*/
             try
             {
-                Thread.sleep(57000);
+                Thread.sleep(INTERBLOCK_DELAY);
             }
             catch (Exception e)
             {
