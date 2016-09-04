@@ -127,7 +127,7 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
 
     }
 
-    public void playEndExperiment()
+    public synchronized void playEndExperiment()
     {
         if (soundPool == null)
         {
@@ -147,11 +147,6 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
     public void run()
     {
 
-        try {
-            Thread.sleep(SLEEP_DELAY);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         // Start block
         if (!this.logFalsePositives) {
             for (Integer itg : trials) {

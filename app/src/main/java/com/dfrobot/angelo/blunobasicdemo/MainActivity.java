@@ -238,7 +238,8 @@ public class MainActivity  extends BlunoLibrary {
         String trial = tstp + ","
                 + selected;
         this.trials.add(trial);
-        this.pw_stimuli.flush();
+        System.out.println("Logging false positive!");
+       // this.pw_stimuli.flush();
 
         // TODO UNLOCK THE DAMN THREAD
         this.soundStimulus.unlockThread(selected);
