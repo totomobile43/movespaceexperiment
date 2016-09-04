@@ -36,6 +36,7 @@ public class MainActivity  extends BlunoLibrary {
     private ArrayList<String> trials = new ArrayList<String>();
 
     private long timestamp;
+    private long initialTimeStamp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +175,7 @@ public class MainActivity  extends BlunoLibrary {
             try {
                 this.pw_stimuli = new PrintWriter(new FileOutputStream(file));
 
-                this.pw_stimuli.println("Timestamp,CompletionTime,Block,Trial,Stimulus,Recognized,Correct,StimulusRepetitions");
+                this.pw_stimuli.println("Timestamp,CompletionTime,Block,Trial,Stimulus,Recognized,Correct");
                 this.pw_stimuli.flush();
                 System.out.println("Created new stimulus file");
                 this.updateLaunchExperiment(this.connectionOK, true);
@@ -204,6 +205,7 @@ public class MainActivity  extends BlunoLibrary {
     public void launchExperiment(View view)
     {
         System.out.println("Let's launch it!");
+        this.initialTimeStamp = System.currentTimeMillis();
         this.disableButtons();
         this.launchExperiment.setText("Block in Progress!");
         this.experimentOn = true;
@@ -239,14 +241,14 @@ public class MainActivity  extends BlunoLibrary {
         long now = System.currentTimeMillis();
         double tstp = (now - this.timestamp) / 1000d;
         int current = this.soundStimulus.getCurrentStimulus();
-        String trial = now + ","
+        double sinceBegin = (now - this.initialTimeStamp) / 1000d;
+        String trial = sinceBegin + ","
                 + tstp + ","
                 + this.soundStimulus.getBlockNumber() + ","
                 + this.soundStimulus.getTrialNumber() + ","
                 + current + ","
                 + selected + ","
-                + (current == selected) + ","
-                + this.soundStimulus.getStimRepeat();
+                + (current == selected);
         this.trials.add(trial);
         this.pw_stimuli.flush();
 
@@ -302,5 +304,10 @@ public class MainActivity  extends BlunoLibrary {
         this.confirmParticipant.setEnabled(false);
     }
 
+
+    public long getInitialTimeStamp()
+    {
+        return this.initialTimeStamp;
+    }
 
 }
