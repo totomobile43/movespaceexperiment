@@ -1,4 +1,4 @@
-package com.dfrobot.angelo.MoveSpaceWild;
+package com.dfrobot.angelo.MoveSpaceCycle;
 
 import android.os.Bundle;
 import android.content.Intent;

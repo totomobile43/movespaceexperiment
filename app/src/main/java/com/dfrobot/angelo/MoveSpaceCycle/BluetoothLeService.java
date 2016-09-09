@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.dfrobot.angelo.MoveSpaceWild;
+package com.dfrobot.angelo.MoveSpaceCycle;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;

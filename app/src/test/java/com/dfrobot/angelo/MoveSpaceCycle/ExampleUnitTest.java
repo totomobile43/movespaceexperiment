@@ -1,4 +1,4 @@
-package com.dfrobot.angelo.MoveSpaceWild;
+package com.dfrobot.angelo.MoveSpaceCycle;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.dfrobot.angelo.MoveSpaceWild;
+package com.dfrobot.angelo.MoveSpaceCycle;
 
 
 import android.media.AudioAttributes;
@@ -32,7 +32,7 @@ public class Stimulus extends Thread implements SoundPool.OnLoadCompleteListener
 
     public static final int SLEEP_DELAY = 10000;
     public static final int INTERTRIAL_DELAY = 2500;
-    public static final int INTERBLOCK_DELAY = 117000;
+    public static final int INTERBLOCK_DELAY = 27000;
 
     private int lastStream = -1;
 
