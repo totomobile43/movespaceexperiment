@@ -28,6 +28,10 @@ public class RingBuffer<T> {
     public void clear() {
         count=0;
     }
+
+    public void clear2() {
+        count=0;
+    }
     
     public void push(T item) {
         if (count == buffer.length) {
