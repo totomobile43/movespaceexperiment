@@ -293,8 +293,18 @@ public class BluetoothLeService extends Service {
         final Intent intent = new Intent(action);
         sendBroadcast(intent);
     }
+	
+    private void broadcg3stUpdate(final String action) {
+        final Intent intent = new Intent(action);
+        sendBroadcast(intent);
+    }
 
-    private void broadcastUpdate(final String action,
+    private void broaggdcastUpdate(final String action) {
+        final Intent intent = new Intent(action);
+        sendBroadcast(intent);
+    }
+
+  private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
         System.out.println("BluetoothLeService broadcastUpdate");
